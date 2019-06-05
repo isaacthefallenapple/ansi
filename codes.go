@@ -1,3 +1,4 @@
+// Package ansi defines a simple ANSI api to format console in- and output.
 package ansi
 
 import (
@@ -5,6 +6,7 @@ import (
 	"strings"
 )
 
+// Code represents an ANSI code
 type Code uint8
 
 const (
@@ -41,22 +43,27 @@ const (
 	BG_Default
 )
 
+// Paint will wrap s in the ANSI escape corresponding to c.
 func (c Code) Paint(s string) string {
 	return Paint(esc(c), s)
 }
+// String returns the code as a string.
 func (c Code) String() string {
 	return fmt.Sprintf("%d", c)
 }
-func esc(c Code) ESC {
-	return _esc(c.String())
-}
+// Compose returns an escape code combining given codes.
 func Compose(effect, fg, bg Code) ESC {
 	return _esc(fmt.Sprintf("%d;%d;%d", effect, fg, bg))
 }
+// Chain returns an escape code chaining together the given codes left to right.
+// The right-most code takes precedence, should two codes be incompatible.
 func Chain(codes ...Code) ESC {
 	escapes := make([]string, len(codes))
 	for i, code := range codes {
 		escapes[i] = esc(code).String()
 	}
 	return ESC(strings.Join(escapes, ""))
+}
+func esc(c Code) ESC {
+	return _esc(c.String())
 }
