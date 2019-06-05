@@ -6,7 +6,7 @@ import "fmt"
 type RGB [3]uint8
 // Foreground returns an ANSI escape sequence representing a foreground of the rgb value.
 func (rgb RGB) Foreground() ESC {
-	return _esc("38;2;" + rgb.String())
+	return esc("38;2;" + rgb.String())
 }
 // FG is a convenience function for Foreground.
 func (rgb RGB) FG() ESC {
@@ -14,7 +14,7 @@ func (rgb RGB) FG() ESC {
 }
 // Background returns an ANSI escape sequence representing a background of the rgb value.
 func (rgb RGB) Background() ESC {
-	return _esc("48;2;" + rgb.String())
+	return esc("48;2;" + rgb.String())
 }
 // BG is a convenience function for Background.
 func (rgb RGB) BG() ESC {

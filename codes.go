@@ -43,9 +43,20 @@ const (
 	BG_Default
 )
 
+// A Painter can "paint" a string.
+type Painter interface {
+	// Paint takes a string and returns it wrapped in the caller's ANSI code
+	// and terminated with TERM.
+	Paint(string) string
+	// Start colors the console in the Painter's color until Stop is called.
+	Start()
+	// Stop resets the console color scheme.
+	Stop()
+}
+
 // Paint will wrap s in the ANSI escape corresponding to c.
 func (c Code) Paint(s string) string {
-	return Paint(esc(c), s)
+	return Paint(c.ESC(), s)
 }
 // String returns the code as a string.
 func (c Code) String() string {
@@ -53,17 +64,26 @@ func (c Code) String() string {
 }
 // Compose returns an escape code combining given codes.
 func Compose(effect, fg, bg Code) ESC {
-	return _esc(fmt.Sprintf("%d;%d;%d", effect, fg, bg))
+	return esc(fmt.Sprintf("%d;%d;%d", effect, fg, bg))
 }
 // Chain returns an escape code chaining together the given codes left to right.
 // The right-most code takes precedence, should two codes be incompatible.
 func Chain(codes ...Code) ESC {
 	escapes := make([]string, len(codes))
 	for i, code := range codes {
-		escapes[i] = esc(code).String()
+		escapes[i] = code.ESC().String()
 	}
 	return ESC(strings.Join(escapes, ""))
 }
-func esc(c Code) ESC {
-	return _esc(c.String())
+// ESC returns the escape sequence corresponding to c.
+func (c Code) ESC() ESC {
+	return esc(c.String())
+}
+// Start will apply the format corresponding to c to the console until Stop is called.
+func (c Code) Start() {
+	fmt.Print(c.ESC())
+}
+// Stop trivially calls Term() to reset the console color scheme.
+func (c Code) Stop() {
+	Term()
 }
