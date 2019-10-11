@@ -58,14 +58,17 @@ type Painter interface {
 func (c Code) Paint(s string) string {
 	return Paint(c.ESC(), s)
 }
+
 // String returns the code as a string.
 func (c Code) String() string {
 	return fmt.Sprintf("%d", c)
 }
+
 // Compose returns an escape code combining given codes.
 func Compose(effect, fg, bg Code) ESC {
 	return esc(fmt.Sprintf("%d;%d;%d", effect, fg, bg))
 }
+
 // Chain returns an escape code chaining together the given codes left to right.
 // The right-most code takes precedence, should two codes be incompatible.
 func Chain(codes ...Code) ESC {
@@ -75,14 +78,17 @@ func Chain(codes ...Code) ESC {
 	}
 	return ESC(strings.Join(escapes, ""))
 }
+
 // ESC returns the escape sequence corresponding to c.
 func (c Code) ESC() ESC {
 	return esc(c.String())
 }
+
 // Start will apply the format corresponding to c to the console until Stop is called.
 func (c Code) Start() {
 	fmt.Print(c.ESC())
 }
+
 // Stop trivially calls Term() to reset the console color scheme.
 func (c Code) Stop() {
 	Term()
