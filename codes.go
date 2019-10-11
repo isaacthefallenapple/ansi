@@ -1,4 +1,4 @@
-// Package ansi defines a simple ANSI api to format console in- and output.
+// Package ansi defines a simple ANSI api to format console output.
 package ansi
 
 import (
@@ -6,9 +6,10 @@ import (
 	"strings"
 )
 
-// Code represents an ANSI code
+// Code represents an ANSI code.
 type Code uint8
 
+// ANSI effect codes.
 const (
 	Default     Code = 0
 	Bold        Code = 1
@@ -17,6 +18,7 @@ const (
 	NoUnderline Code = 24
 )
 
+// ANSI foreground codes.
 const (
 	FG_Black Code = iota + 30
 	FG_Red
@@ -30,6 +32,7 @@ const (
 	FG_Default
 )
 
+// ANSI background codes.
 const (
 	BG_Black Code = iota + 40
 	BG_Red
